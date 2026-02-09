@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 450" width="820" height="450">
+<style>text { font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 13px; fill: #cdd6f4; }</style>
+<rect width="820" height="450" rx="8" fill="#1e1e2e"/>
+<text x="16" y="34"><tspan fill="#a6e3a1">[INFO ]</tspan> [App] starting up</text>
+<text x="16" y="52"><tspan fill="#94e2d5">[DEBUG]</tspan> [App] version=3 build=release</text>
+<text x="16" y="70"><tspan fill="#f9e2af">[WARN ]</tspan> [App] disk usage high</text>
+<text x="16" y="88"><tspan fill="#f38ba8">[ERROR]</tspan> [App] connection refused</text>
+<text x="16" y="106"><tspan fill="#a6e3a1">[INFO ]</tspan> [HTTP] request method=GET path=/api/users status=200 latency_ms=3.14</text>
+<text x="16" y="124"><tspan fill="#a6e3a1">[INFO ]</tspan> [DB] query req_id=abc-123 user=42 rows=100</text>
+<text x="16" y="142"><tspan fill="#94e2d5">[DEBUG]</tspan> [App] computation elapsed_us=185</text>
+<text x="16" y="160"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] bool: true false</text>
+<text x="16" y="178"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] int=42 uint=123 i64=-99</text>
+<text x="16" y="196"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] pi=3.14159 e=2.71828 zero=0.0 neg=-1.5</text>
+<text x="16" y="214"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] ptr=0x7ffebce28830 null=null</text>
+<text x="16" y="232"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] byte=ab</text>
+<text x="16" y="250"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] some=42 none=null</text>
+<text x="16" y="268"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] variant=hello</text>
+<text x="16" y="286"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] errc=generic:22</text>
+<text x="16" y="304"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] dur=150ms fast=42us nano=999ns sec=3s</text>
+<text x="16" y="322"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] pair=(42, hello)</text>
+<text x="16" y="340"><tspan fill="#a6e3a1">[INFO ]</tspan> [Type] vec=[1, 2, 3, 4, 5]</text>
+<text x="16" y="358"><tspan fill="#a6e3a1">[INFO ]</tspan> [Net] packet:</text>
+<text x="16" y="376">0000  45 00 00 3c 1c 46 40 00  40 06 b1 e6 ac 10 0a 63 |E..&lt;.F@.@......c|</text>
+<text x="16" y="394">0010  ac 10 0a 0c 00 50 c0 1e                          |.....P..|</text>
+<text x="16" y="412">0000  2a 00 00 00                                      |*...|</text>
+<text x="16" y="430">{&quot;level&quot;:&quot;info&quot;,&quot;ctx&quot;:&quot;App&quot;,&quot;ts&quot;:&quot;2026-02-09T19:58:44.285Z&quot;,&quot;msg&quot;:&quot;json output&quot;,&quot;string&quot;:&quot;hello \&quot;world\&quot;&quot;,&quot;num&quot;:42,&quot;float&quot;:3.14,&quot;flag&quot;:true}</text>
+</svg>
