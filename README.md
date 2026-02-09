@@ -7,73 +7,135 @@ needs c++23 (gcc 14+ / clang 18+) and linux.
 ## demo
 
 ```cpp
-#include "log.h"
+Log::info("App", "starting up");
+Log::debug("App", "version=", 3, " build=", "release");
+Log::warning("App", "disk usage high");
+Log::error("App", "connection refused");
+```
+```ansi
+[32m[INFO ][0m [App] starting up
+[36m[DEBUG][0m [App] version=3 build=release
+[33m[WARN ][0m [App] disk usage high
+[31m[ERROR][0m [App] connection refused
+```
 
-Log::info("App", "hello");                          // [INFO ] [App] hello
-Log::info("App", "n=", 42, " pi=", 3.14);           // [INFO ] [App] n=42 pi=3.14
-Log::warning("App", "disk usage high");              // [WARN ] [App] disk usage high
+```cpp
+Log::info("HTTP", "request",
+    Log::kv("method", "GET"), Log::kv("path", "/api/users"),
+    Log::kv("status", 200), Log::kv("latency_ms", 3.14));
+```
+```ansi
+[32m[INFO ][0m [HTTP] request method=GET path=/api/users status=200 latency_ms=3.14
+```
 
-// structured fields
-Log::info("HTTP", "req",
-    Log::kv("method", "GET"),
-    Log::kv("status", 200),
-    Log::kv("ms", 3.14));
-// [INFO ] [HTTP] req method=GET status=200 ms=3.14
-
-// scoped fields — stick to every log call until scope ends
+```cpp
 {
-    auto s = Log::Scope(Log::kv("req", "abc-123"));
-    Log::info("DB", "query");                        // [INFO ] [DB] query req=abc-123
+    auto scope = Log::Scope(Log::kv("req_id", "abc-123"), Log::kv("user", 42));
+    Log::info("DB", "query", Log::kv("rows", 100));
+    Log::info("Cache", "miss", Log::kv("key", "user:42"));
 }
+```
+```ansi
+[32m[INFO ][0m [DB] query req_id=abc-123 user=42 rows=100
+[32m[INFO ][0m [Cache] miss req_id=abc-123 user=42 key=user:42
+[32m[INFO ][0m [DB] insert req_id=abc-123 user=42 tx=write table=events
+```
 
-// timer — logs elapsed on destruction
-{ auto t = Log::Timer("App", "work"); }              // [DEBUG] [App] work elapsed_us=42
+```cpp
+{ auto timer = Log::Timer("App", "computation"); /* ... */ }
+```
+```ansi
+[36m[DEBUG][0m [App] computation elapsed_us=185
+```
 
-// source location
-Log::info(Log::Loc{}, "App", "here");                // [INFO ] [App] here (main.cpp:42)
+```cpp
+Log::info("Type", "bool: ", true, " ", false);
+Log::info("Type", "int=", 42, " pi=", 3.14, " float=", 3.14f);
+Log::info("Type", "ptr=", (void*)&x, " null=", nullptr);
+Log::info("Type", "byte=", std::byte{0xAB});
+Log::info("Type", "some=", std::optional{42}, " none=", std::optional<int>{});
+Log::info("Type", "variant=", std::variant<int,std::string>{"hello"});
+Log::info("Type", "shared=", std::make_shared<int>(99), " null=", std::unique_ptr<int>{});
+Log::info("Type", "ec=", std::make_error_code(std::errc::no_such_file_or_directory));
+Log::info("Type", "errc=", std::errc::invalid_argument);
+Log::info("Type", "dur=", 150ms, " fast=", 42us, " nano=", 999ns);
+Log::info("Type", "now=", std::chrono::system_clock::now());
+Log::info("Type", "tid=", std::this_thread::get_id());
+Log::info("Type", "status=", Status::OK);  // enum
+Log::info("Type", "pair=", std::pair{42, "hello"});
+Log::info("Type", "tuple=", std::tuple{1, 3.14, "x"});
+Log::info("Type", "vec=", std::vector{1, 2, 3, 4, 5});
+Log::info("Type", "map=", std::map<std::string,int>{{"a",1},{"b",2}});
+Log::info("Type", "span=", std::span{bytes});
+Log::info("Type", "path=", std::filesystem::path{"/tmp/test.txt"});
+Log::info(Log::Loc{}, "Type", "with source location");
+```
+```ansi
+[32m[INFO ][0m [Type] bool: true false
+[32m[INFO ][0m [Type] int=42 uint=123 i64=-99
+[32m[INFO ][0m [Type] pi=3.14159 e=2.71828 zero=0.0 neg=-1.5
+[32m[INFO ][0m [Type] float=3.14
+[32m[INFO ][0m [Type] cstr=hello
+[32m[INFO ][0m [Type] sv=world
+[32m[INFO ][0m [Type] str=std::string
+[32m[INFO ][0m [Type] path=/tmp/test.txt
+[32m[INFO ][0m [Type] ptr=0x7ffc4b3cbd80 null=null
+[32m[INFO ][0m [Type] byte=ab
+[32m[INFO ][0m [Type] null=null mono=null
+[32m[INFO ][0m [Type] some=42 none=null
+[32m[INFO ][0m [Type] variant=hello
+[32m[INFO ][0m [Type] shared=0x10d765e0 null=null
+[32m[INFO ][0m [Type] ec=generic:2
+[32m[INFO ][0m [Type] errc=generic:22
+[32m[INFO ][0m [Type] dur=150ms fast=42us nano=999ns sec=3s
+[32m[INFO ][0m [Type] now=2026-02-09T19:55:40.686Z
+[32m[INFO ][0m [Type] tid=tid:0x4579383a22116b50
+[32m[INFO ][0m [Type] with source location ([2mexample.cpp:104[0m)
+[32m[INFO ][0m [Type] status=0
+[32m[INFO ][0m [Type] pair=(42, hello)
+[32m[INFO ][0m [Type] tuple=(1, 3.14, x)
+[32m[INFO ][0m [Type] vec=[1, 2, 3, 4, 5]
+[32m[INFO ][0m [Type] map=[(a, 1), (b, 2)]
+[32m[INFO ][0m [Type] arr=[10, 20, 30]
+[32m[INFO ][0m [Type] span=[de, ad, be, ef]
+```
 
-// all the types — just pass them in
-Log::info("T", "bool=", true);                       // bool=true
-Log::info("T", "opt=", std::optional{42});           // opt=42
-Log::info("T", "opt=", std::optional<int>{});        // opt=null
-Log::info("T", "var=", std::variant<int,std::string>{"hi"});  // var=hi
-Log::info("T", "ptr=", std::make_shared<int>(1));    // ptr=0x...
-Log::info("T", "ec=", std::errc::invalid_argument);  // ec=generic:22
-Log::info("T", "dur=", std::chrono::milliseconds{42}); // dur=42ms
-Log::info("T", "now=", std::chrono::system_clock::now()); // now=2025-01-01T12:00:00.000Z
-Log::info("T", "tid=", std::this_thread::get_id());  // tid=0x...
-Log::info("T", "vec=", std::vector{1,2,3});          // vec=[1, 2, 3]
-Log::info("T", "pair=", std::pair{1, "x"});          // pair=(1, x)
-Log::info("T", "byte=", std::byte{0xAB});            // byte=ab
-Log::info("T", "null=", nullptr);                    // null=null
-Log::info("T", "enum=", MyEnum::Foo);                // enum=0
-Log::info("T", "path=", std::filesystem::path{"/tmp"});  // path=/tmp
-Log::info("Net", "pkt:\n", Log::hexdump(buf, len));  // hex + ascii dump
+```cpp
+Log::info("Net", "packet:\n", Log::hexdump(pkt, sizeof(pkt)));
+```
+```ansi
+[32m[INFO ][0m [Net] packet:
+0000  45 00 00 3c 1c 46 40 00  40 06 b1 e6 ac 10 0a 63 |E..<.F@.@......c|
+0010  ac 10 0a 0c 00 50 c0 1e                          |.....P..|
+```
 
-// json output
+```cpp
 Log::setFormat(Log::JSON);
-Log::info("App", "msg", Log::kv("k", "v"));
-// {"level":"info","ctx":"App","msg":"msg","k":"v"}
+Log::info("App", "json output",
+    Log::kv("string", "hello \"world\""), Log::kv("num", 42),
+    Log::kv("float", 3.14), Log::kv("flag", true));
+```
+```json
+{"level":"info","ctx":"App","ts":"2026-02-09T19:55:40.686Z","msg":"json output","string":"hello \"world\"","num":42,"float":3.14,"flag":true}
+```
 
-// runtime config
-Log::setFormat(Log::Logfmt);       // default
-Log::setMinLevel(Log::Warning);
-Log::setTimestamps(true);
-Log::setColors(true);              // or Log::autoDetectColors()
-Log::setThreadId(true);
-Log::setContextFilter("App,-DB");  // allow App, block DB
-
-// sampling + rate limiting
+```cpp
+// sampling + rate limiting + conditional macros
 if (Log::sample<100>()) Log::debug("Hot", "1-in-100");
 LOG_RATE_LIMITED_MS(info, 1000, "Ctx", "once per second");
-
-// conditional macros
 LOG_ONCE(info, "Ctx", "first time only");
 LOG_FIRST_N(info, 5, "Ctx", "first 5");
 LOG_EVERY_N(info, 100, "Ctx", "every 100th");
 LOG_IF(warning, x > limit, "Ctx", "over limit");
 LOG_ASSERT(ptr, "Ctx", "shouldn't be null");
 LOG_DLOG("Ctx", "compiled out when LOG_LEVEL > 0");
+
+// runtime config
+Log::setMinLevel(Log::Warning);
+Log::setTimestamps(true);
+Log::setColors(true);              // or Log::autoDetectColors()
+Log::setThreadId(true);
+Log::setContextFilter("App,-DB");  // allow App, block DB
 ```
 
 auto-detected if available: `expected`, `mdspan`, `stacktrace`, `std::format` fallback
