@@ -1,4 +1,4 @@
-example
-bench
-bench_run
+examples/example
+bench/bench
+bench/bench_run
 *.o

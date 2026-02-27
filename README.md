@@ -6,7 +6,7 @@ needs c++26 (gcc 15+ / clang 20+) and linux.
 
 ## demo
 
-![demo output](demo.svg)
+![demo output](examples/demo.svg)
 
 auto-detected if available: `expected`, `mdspan`, `stacktrace`, `std::format` fallback
 
@@ -15,7 +15,7 @@ auto-detected if available: `expected`, `mdspan`, `stacktrace`, `std::format` fa
 ```
 make run-example
 make run-bench
-./bench.sh
+bench/bench.sh
 ```
 
 ## config macros
