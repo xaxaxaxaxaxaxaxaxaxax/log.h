@@ -1,5 +1,5 @@
 CXX      ?= g++
-CXXFLAGS ?= -std=c++23 -O2 -march=native -Wall -Wextra
+CXXFLAGS ?= -std=c++26 -O2 -march=native -Wall -Wextra
 
 .PHONY: all clean check run-example run-bench
 

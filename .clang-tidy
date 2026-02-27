@@ -1,0 +1,276 @@
+---
+# Exclusion rationale:
+#   bugprone-array-index                    Bounds are known at all call sites; noise for SIMD/lookup-table code.
+#   bugprone-easily-swappable-parameters    Too noisy with legitimate code patterns.
+#   bugprone-empty-catch                    Sometimes intentional (e.g., cleanup that must not throw).
+#   bugprone-exception-escape               Overly aggressive; flags noexcept functions that call throwing code.
+#   bugprone-unchecked-optional-access      Too many false positives; cannot handle early exits or long-range logic.
+#   cert-dcl16-c                            Alias for readability-uppercase-literal-suffix (disabled below).
+#   cert-dcl50-cpp                          Alias for cppcoreguidelines-pro-type-vararg.
+#   cppcoreguidelines-avoid-const-or-ref-data-members  Breaks legitimate patterns; not all types need move ctors.
+#   cppcoreguidelines-avoid-do-while        do-while is fine (used in macros).
+#   cppcoreguidelines-avoid-magic-numbers   Alias for readability-magic-numbers (too aggressive).
+#   cppcoreguidelines-pro-bounds-*          Too restrictive for systems/SIMD code; "unsafe operator[]" is noise.
+#   cppcoreguidelines-pro-type-const-cast   Sometimes necessary.
+#   cppcoreguidelines-pro-type-reinterpret-cast  Necessary for SIMD intrinsics and low-level buffer manipulation.
+#   cppcoreguidelines-pro-type-vararg       Macros use __VA_ARGS__; not the same as C-style varargs.
+#   hicpp-signed-bitwise                    Bit manipulation on signed types is intentional in SIMD/packing code.
+#   cppcoreguidelines-special-member-functions  Too prescriptive; rule of zero is preferred when possible.
+#   misc-include-cleaner                    Too many false positives with header-heavy template code.
+#   modernize-use-trailing-return-type      Stylistic preference; traditional return types are clearer.
+#   performance-avoid-endl                  Not relevant to this project (no iostream usage).
+#   performance-enum-size                   Recommends uint8_t for everything; bad for future-proofness.
+#   portability-avoid-pragma-once           Universally supported; project uses pragma once.
+#   readability-avoid-unconditional-preprocessor-if  Sometimes intentional.
+#   readability-braces-around-statements    Project style uses `if (cond) return x;` single-line guards.
+#   readability-function-cognitive-complexity  Too subjective.
+#   readability-identifier-length           Single-letter vars are fine in many contexts (SIMD, math, lambdas).
+#   readability-magic-numbers               Too aggressive for practical code (buffer sizes, bit shifts, etc.).
+#   readability-redundant-access-specifiers Enables grouped member declarations.
+#   readability-redundant-member-init       Enables partial object initialization.
+#   readability-math-missing-parentheses    Standard math notation (a + b * c) doesn't need parens.
+#   readability-uppercase-literal-suffix    ULL, UZ, etc. are perfectly readable.
+Checks: '-*,
+    bugprone-*,
+    -bugprone-array-index,
+    -bugprone-easily-swappable-parameters,
+    -bugprone-empty-catch,
+    -bugprone-exception-escape,
+    -bugprone-unchecked-optional-access,
+
+    cert-*,
+    -cert-dcl16-c,
+    -cert-dcl50-cpp,
+
+    clang-analyzer-*,
+
+    clang-diagnostic-*,
+    -clang-diagnostic-comment,
+    -clang-diagnostic-unknown-attributes,
+
+    concurrency-*,
+
+    cppcoreguidelines-*,
+    -cppcoreguidelines-avoid-const-or-ref-data-members,
+    -cppcoreguidelines-avoid-do-while,
+    -cppcoreguidelines-avoid-magic-numbers,
+    -cppcoreguidelines-non-private-member-variables-in-classes,
+    -cppcoreguidelines-pro-bounds-*,
+    -cppcoreguidelines-pro-type-const-cast,
+    -cppcoreguidelines-pro-type-reinterpret-cast,
+    -cppcoreguidelines-pro-type-vararg,
+    -cppcoreguidelines-special-member-functions,
+
+    google-build-using-namespace,
+    google-default-arguments,
+    google-explicit-constructor,
+    google-readability-casting,
+    google-runtime-operator,
+
+    hicpp-exception-baseclass,
+    hicpp-ignored-remove-result,
+    hicpp-multiway-paths-covered,
+
+    llvm-namespace-comment,
+
+    misc-*,
+    -misc-include-cleaner,
+    -misc-non-private-member-variables-in-classes,
+
+    modernize-*,
+    -modernize-use-trailing-return-type,
+
+    performance-*,
+    -performance-avoid-endl,
+    -performance-enum-size,
+
+    portability-*,
+    -portability-avoid-pragma-once,
+
+    readability-*,
+    -readability-avoid-unconditional-preprocessor-if,
+    -readability-braces-around-statements,
+    -readability-function-cognitive-complexity,
+    -readability-identifier-length,
+    -readability-magic-numbers,
+    -readability-math-missing-parentheses,
+    -readability-redundant-access-specifiers,
+    -readability-redundant-member-init,
+    -readability-uppercase-literal-suffix'
+
+# Promote high-confidence bug-finders to errors so they break the build.
+WarningsAsErrors: '
+    bugprone-casting-through-void,
+    bugprone-copy-constructor-init,
+    bugprone-dangling-handle,
+    bugprone-forwarding-reference-overload,
+    bugprone-incorrect-roundings,
+    bugprone-infinite-loop,
+    bugprone-misplaced-widening-cast,
+    bugprone-move-forwarding-reference,
+    bugprone-return-const-ref-from-parameter,
+    bugprone-sizeof-expression,
+    bugprone-string-constructor,
+    bugprone-stringview-nullptr,
+    bugprone-suspicious-include,
+    bugprone-suspicious-memory-comparison,
+    bugprone-swapped-arguments,
+    bugprone-throw-keyword-missing,
+    bugprone-undefined-memory-manipulation,
+    bugprone-unused-raii,
+    bugprone-use-after-move,
+    bugprone-virtual-near-miss,
+    clang-analyzer-core.DivideZero,
+    clang-analyzer-core.NullDereference,
+    clang-analyzer-core.StackAddressEscape,
+    clang-analyzer-core.uninitialized.Assign,
+    clang-analyzer-cplusplus.Move,
+    clang-analyzer-cplusplus.NewDelete,
+    clang-analyzer-cplusplus.NewDeleteLeaks,
+    cppcoreguidelines-missing-std-forward,
+    cppcoreguidelines-pro-type-member-init,
+    cppcoreguidelines-slicing,
+    performance-no-automatic-move,
+    performance-noexcept-destructor,
+    performance-noexcept-move-constructor,
+    performance-noexcept-swap'
+
+CheckOptions:
+  # --- Naming: CamelCase types, camelBack functions/variables ---
+  # Types
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.ConceptCase
+    value: CamelCase
+  - key: readability-identifier-naming.TypeAliasCase
+    value: CamelCase
+  # Template params: CamelCase (T, InputIt, Alloc)
+  - key: readability-identifier-naming.TypeTemplateParameterCase
+    value: CamelCase
+  - key: readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+  # Namespaces
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+  # Functions & methods
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.PublicMethodCase
+    value: camelBack
+  - key: readability-identifier-naming.ProtectedMethodCase
+    value: camelBack
+  - key: readability-identifier-naming.PrivateMethodCase
+    value: camelBack
+  # Members: camelBack with trailing underscore for private/protected
+  - key: readability-identifier-naming.PublicMemberCase
+    value: camelBack
+  - key: readability-identifier-naming.PrivateMemberCase
+    value: camelBack
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: '_'
+  - key: readability-identifier-naming.ProtectedMemberCase
+    value: camelBack
+  - key: readability-identifier-naming.ProtectedMemberSuffix
+    value: '_'
+  # Variables & parameters
+  - key: readability-identifier-naming.ParameterCase
+    value: camelBack
+  - key: readability-identifier-naming.LocalVariableCase
+    value: camelBack
+  # Constants: camelBack (k-prefixed constants like kBuf, kHex are camelBack)
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: camelBack
+  - key: readability-identifier-naming.StaticConstantCase
+    value: camelBack
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: camelBack
+
+  # --- Aggressive const analysis with auto-fix ---
+  - key: misc-const-correctness.AnalyzeValues
+    value: true
+  - key: misc-const-correctness.AnalyzeReferences
+    value: true
+  - key: misc-const-correctness.WarnPointersAsValues
+    value: true
+  - key: misc-const-correctness.TransformValues
+    value: true
+  - key: misc-const-correctness.TransformReferences
+    value: true
+  - key: misc-const-correctness.TransformPointersAsValues
+    value: true
+
+  - key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value: true
+
+  # --- Function size limits ---
+  - key: readability-function-size.LineThreshold
+    value: 200
+  - key: readability-function-size.StatementThreshold
+    value: 150
+  - key: readability-function-size.NestingThreshold
+    value: 6
+  - key: readability-function-size.ParameterThreshold
+    value: 8
+
+  # --- Readability tuning ---
+  - key: readability-simplify-boolean-expr.ChainedConditionalReturn
+    value: true
+  - key: readability-simplify-boolean-expr.ChainedConditionalAssignment
+    value: true
+  - key: readability-implicit-bool-conversion.AllowPointerConditions
+    value: true
+  - key: readability-else-after-return.WarnOnUnfixable
+    value: false
+  - key: readability-else-after-return.WarnOnConditionVariables
+    value: false
+
+  # --- Bugprone tuning ---
+  - key: bugprone-argument-comment.StrictMode
+    value: true
+  - key: bugprone-assert-side-effect.AssertMacros
+    value: 'assert,LOG_ASSERT'
+  - key: bugprone-narrowing-conversions.WarnOnIntegerNarrowingConversion
+    value: true
+  - key: bugprone-narrowing-conversions.WarnOnFloatingPointNarrowingConversion
+    value: true
+  - key: bugprone-narrowing-conversions.IgnoreConversionFromTypes
+    value: 'size_t;ptrdiff_t;size_type;difference_type'
+  - key: bugprone-sizeof-expression.WarnOnSizeOfCompareToConstant
+    value: true
+  - key: bugprone-signed-char-misuse.DiagnoseSignedUnsignedCharComparisons
+    value: true
+  - key: bugprone-suspicious-string-compare.WarnOnImplicitComparison
+    value: true
+  - key: bugprone-suspicious-string-compare.WarnOnLogicalNotComparison
+    value: true
+
+  # --- Modernize ---
+  - key: modernize-loop-convert.MaxCopySize
+    value: 16
+  - key: modernize-loop-convert.MinConfidence
+    value: reasonable
+  - key: modernize-use-std-format.ReplacementFormatFunction
+    value: 'std::format'
+  - key: modernize-use-std-format.IncludeStyle
+    value: 'llvm'
+
+  # --- Performance ---
+  - key: performance-for-range-copy.WarnOnAllAutoCopies
+    value: true
+  - key: performance-inefficient-string-concatenation.StrictMode
+    value: true
+  - key: performance-move-const-arg.CheckTriviallyCopyableMove
+    value: false
+  - key: performance-unnecessary-copy-initialization.AllowedTypes
+    value: 'std::shared_ptr;std::unique_ptr'
+  - key: performance-unnecessary-value-param.AllowedTypes
+    value: 'std::shared_ptr;std::unique_ptr'
+
+UseColor: true
+HeaderFilterRegex: 'log\.h'

@@ -1,0 +1,182 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+Standard: Latest
+
+# --- Indentation ---
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ContinuationIndentWidth: 4
+AccessModifierOffset: -4
+IndentCaseLabels: true
+IndentCaseBlocks: false
+IndentExternBlock: AfterExternBlock
+IndentPPDirectives: None
+IndentRequiresClause: true
+IndentWrappedFunctionNames: false
+LambdaBodyIndentation: OuterScope
+NamespaceIndentation: All
+
+# --- Column & lines ---
+ColumnLimit: 120
+MaxEmptyLinesToKeep: 2
+InsertNewlineAtEOF: true
+LineEnding: LF
+KeepEmptyLines:
+  AtEndOfFile: false
+  AtStartOfBlock: false
+  AtStartOfFile: false
+
+# --- Braces ---
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+
+# --- Single-line allowances ---
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: false
+AllowShortLambdasOnASingleLine: All
+AllowShortEnumsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortCompoundRequirementOnASingleLine: true
+
+# --- Break rules ---
+BreakTemplateDeclarations: Yes
+BreakConstructorInitializers: AfterColon
+PackConstructorInitializers: NextLine
+BreakInheritanceList: BeforeColon
+BreakBeforeTernaryOperators: true
+BreakBeforeBinaryOperators: NonAssignment
+BreakStringLiterals: true
+BreakAdjacentStringLiterals: true
+BreakAfterAttributes: Never
+BreakBeforeConceptDeclarations: Always
+RequiresClausePosition: OwnLine
+RequiresExpressionIndentation: OuterScope
+
+# --- Alignment ---
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+  AlignCompound: false
+  PadOperators: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+  AlignCompound: false
+  PadOperators: false
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+AlignAfterOpenBracket: Align
+AlignOperands: DontAlign
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 0
+AlignEscapedNewlines: Right
+
+# --- Qualifiers ---
+QualifierAlignment: Left
+
+# --- Spaces ---
+SpaceAfterCStyleCast: true
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeRangeBasedForLoopColon: false
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
+SpacesInAngles: Never
+SpacesInContainerLiterals: true
+SpacesInSquareBrackets: false
+SpacesInParens: Never
+SpaceBeforeParens: ControlStatements
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterForeachMacros: true
+  AfterFunctionDefinitionName: false
+  AfterFunctionDeclarationName: false
+  AfterIfMacros: true
+  AfterOverloadedOperator: false
+  AfterRequiresInClause: false
+  AfterRequiresInExpression: false
+  BeforeNonEmptyParentheses: false
+
+# --- Pointer/reference ---
+DerivePointerAlignment: false
+PointerAlignment: Right
+ReferenceAlignment: Pointer
+
+# --- Includes ---
+SortIncludes:
+  Enabled: true
+  IgnoreCase: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  # 1: The "main" header for a .cpp file
+  - Regex: '^"log\.h"'
+    Priority: 0
+    SortPriority: 0
+  # 2: Project-local headers
+  - Regex: '^".*'
+    Priority: 2
+    SortPriority: 2
+  # 3: System/standard library
+  - Regex: '^<.*>'
+    Priority: 1
+    SortPriority: 1
+IncludeIsMainRegex: '([-_](test|unittest|bench))?$'
+SortUsingDeclarations: LexicographicNumeric
+
+# --- Packing ---
+BinPackArguments: true
+BinPackParameters: BinPack
+
+# --- Penalties ---
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakOpenParenthesis: 0
+PenaltyBreakString: 1000
+PenaltyBreakTemplateDeclaration: 10
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 60
+
+# --- Class layout ---
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: LogicalBlock
+
+# --- Misc ---
+Cpp11BracedListStyle: true
+FixNamespaceComments: true
+ReflowComments: Always
+RemoveSemicolon: true
+RemoveParentheses: ReturnStatement
+CompactNamespaces: false
+...
