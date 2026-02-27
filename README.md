@@ -1,8 +1,8 @@
 # log.h ^_^
 
-single-header c++23 structured logger. zero allocations, ~100ns/call. simd-accelerated when available. logs to stderr via raw `syscall` on x86-64 linux.
+single-header c++26 structured logger. zero allocations, ~100ns/call. simd-accelerated when available. logs to stderr via raw `syscall` on x86-64 linux.
 
-needs c++23 (gcc 14+ / clang 18+) and linux.
+needs c++26 (gcc 15+ / clang 20+) and linux.
 
 ## demo
 
